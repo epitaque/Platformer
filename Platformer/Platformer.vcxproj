@@ -71,13 +71,13 @@
     <LibraryPath>C:\Users\Brian\C++\SFML-2.2-2013\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\Brian\C++\SFML-2.2-2013-64bit\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Brian\C++\SFML-2.2-2013-64bit\include;C:\Users\Brian\C++\boost_1_58_0;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\Brian\C++\SFML-2.2-2013-64bit\lib;$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
-    <IncludePath>C:\Users\Brian\C++\SFML-2.2-2013-64bit\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Brian\C++\SFML-2.2-2013-64bit\include;C:\Users\Brian\C++\boost_1_58_0;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\Brian\C++\SFML-2.2-2013-64bit\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -139,9 +139,11 @@
   <ItemGroup>
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BlockFunction.cpp" />
+    <ClCompile Include="ElementComboBox.cpp" />
+    <ClCompile Include="GUI.cpp" />
+    <ClCompile Include="ElementButton.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelGUI.cpp" />
-    <ClCompile Include="MenuGUI.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Side.cpp" />
@@ -150,9 +152,11 @@
   <ItemGroup>
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockFunction.h" />
+    <ClInclude Include="ElementComboBox.h" />
+    <ClInclude Include="GUI.h" />
+    <ClInclude Include="ElementButton.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelGUI.h" />
-    <ClInclude Include="MenuGUI.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Side.h" />
