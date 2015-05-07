@@ -1,14 +1,11 @@
 #include "ElementComboBox.h"
 
 
-ElementComboBox::ElementComboBox()
+ElementComboBox::ElementComboBox(Vector2f Location, string Text, Vector2f Size, Color color)
 {
 }
 
-ElementComboBox::~ElementComboBox()
-{
-}
-
+ElementComboBox::~ElementComboBox() {}
 void ElementComboBox::Draw()
 {
 

@@ -1,29 +1,41 @@
 #pragma once
-
+#include <iostream>
 #include <SFML/Graphics.hpp>
+
 using namespace sf;
 using namespace std;
 
 class ElementButton
 {
 public:
+	ElementButton();
 	ElementButton(string Text, Vector2f Location, Vector2f Size, Color color, void(*ButtonFunction)());
+	~ElementButton();
+
+	RectangleShape rect;
+
 	void Draw(RenderWindow* window);
 	void PressButton();
 	void SoftRelease();
 	void ReleaseButton();
 	void HoverButton();
 	void HoverRelease();
-	RectangleShape rect;
+
+	void SetLocation(Vector2f Location, Vector2f WindowDimensions);
+	void SetColor(Color color);
+	void SetText(string TextA);
+	void SetSize(Vector2f Size);
+
 	bool IsPressed;
-	~ElementButton();
-private:
-	Vector2f Location;
-	Vector2f Size;
-	Text text;
-	Font font;
 	Color color;
+
 	void(*ButtonFunction)();
+	
+private: 
+	Vector2f Size;
+	Font font;
+	Vector2f Location;
+	Text text;
 };
 
 

@@ -16,12 +16,13 @@ public:
 	GUI::GUI(string GUIFileName, RenderWindow* window);
 	~GUI();
 	void Update();
-	void ParseElements(string GUIFileName);
 private:
 	RenderWindow *window;
+	void ParseElements();
 	void Draw();
 	vector<ElementButton*> ButtonStack;
 	vector<ElementComboBox*> ComboBoxStack;
-	Event event;
+	
+	string GUIFileName;
 };
 

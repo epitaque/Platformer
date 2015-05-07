@@ -66,7 +66,7 @@ void Level::ParseBlocks()
 			variable.erase();
 			value.erase();
 			side.erase();
-			if (line.empty())
+			if (line.empty() || (line.at(0) && line.at(1) == '/'))
 				continue;
 			if (line.at(0) == '~') { // parse ~<name>, after this is the block info	
 				line.erase(0, 1);

@@ -1,6 +1,9 @@
 #include "ElementButton.h"
 
-// BUTTON CODE :D
+ElementButton::ElementButton() 
+{
+}
+
 ElementButton::ElementButton(string Text, Vector2f Location, Vector2f Size, Color color, void(*ButtonFunction)())
 {
 	//Rect stuff
@@ -14,10 +17,9 @@ ElementButton::ElementButton(string Text, Vector2f Location, Vector2f Size, Colo
 	
 	//Text Stuff (see how inconsistently I just capitalized "Stuff"?)
 	font.loadFromFile("Fonts/AlegreyaSansSC-Light.otf");
-	text.setString(Text);
+	
 	text.setFont(font);
 	text.setCharacterSize(Size.y / 1.5);
-	text.setPosition(Location);
 	text.setColor(Color::Black);
 }
 
@@ -26,6 +28,33 @@ ElementButton::~ElementButton()
 	
 }
 
+void ElementButton::SetLocation(Vector2f Location, Vector2f WindowDimensions)
+{
+	rect.setPosition((Location.x / 100) * WindowDimensions.x, (Location.y / 100) * WindowDimensions.y);
+	text.setPosition((Location.x / 100) * WindowDimensions.x, (Location.y / 100) * WindowDimensions.y);
+	cout << "Set location of rect." << endl;
+}
+
+void ElementButton::SetText(string TextA)
+{
+	text.setString(TextA);
+	cout << "Set text of rect." << endl;
+}
+
+void ElementButton::SetColor(Color color)
+{
+	this->color = color;
+	rect.setFillColor(color);
+	cout << "Set fill color of rect." << endl;
+}
+
+
+void ElementButton::SetSize(Vector2f Size)
+{
+	this->Size = Size;
+	rect.setSize(Size);
+	cout << "Set size of rect." << endl;
+}
 void ElementButton::PressButton()
 {
 	rect.setFillColor(Color(color.r + 59, color.g + 59, color.b + 59, color.a));
@@ -41,7 +70,8 @@ void ElementButton::SoftRelease()
 void ElementButton::ReleaseButton()
 {
 	rect.setFillColor(color);
-	ButtonFunction();
+	//ButtonFunction();
+	cout << "ButtonFunction!\n";
 	IsPressed = false;
 }
 
@@ -59,5 +89,6 @@ void ElementButton::Draw(RenderWindow* window)
 {
 	window->draw(rect);
 	window->draw(text);
+	//cout << "Drew button at " << rect.getPosition().x << ", " << rect.getPosition().y << endl;
 }
 
