@@ -14,6 +14,7 @@ class GUI
 public:
 	GUI::GUI();
 	GUI::GUI(string GUIFileName, RenderWindow* window);
+	GUI* CurrentGUI;
 	~GUI();
 	void Update();
 private:
@@ -24,5 +25,9 @@ private:
 	vector<ElementComboBox*> ComboBoxStack;
 	
 	string GUIFileName;
+
+	Color ParseColor(string Value);
+	Vector2f ParseLocation(string Value);
+	Vector2f ParseSize(string Value);
 };
 

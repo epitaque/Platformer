@@ -1,22 +1,32 @@
 #pragma once
-
+#include <iostream>
 #include <SFML/Graphics.hpp>
+#include "ElementButton.h"
+
 using namespace sf;
 using namespace std;
 
 class ElementComboBox
 {
 public:
-	ElementComboBox(Vector2f Location, string Text, Vector2f Size, Color color);
+	ElementComboBox(RenderWindow* window);
 	~ElementComboBox();
-	void Draw();
-private:
-	Vector2f Size;
-	string StringText;
+
+	void Update();
+	void AddButton(ElementButton ButtonA);
+	void AddButton(string TextB);
+	ElementButton* GetSelectedButton();
+
+	vector<ElementButton*> ButtonStack;
+	bool IsExpanded;
 	Vector2f Location;
-	Text text;
-	Color color;
-	Font font;
+	float width, height; 
+private:
+	RenderWindow* window;
+	void Draw(ElementButton* ButtonA);
+	ElementButton* SelectedButton;
+	void Expand();
+	void Contract();
 };
 
 

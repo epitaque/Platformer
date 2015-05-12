@@ -13,16 +13,13 @@ GUI::GUI(string GUIFileName, sf::RenderWindow* window)
 void GUI::ParseElements()
 {
 	ifstream GUIFile;
-	
 	GUIFile.open(GUIFileName + ".txt", ios::in);
 
-	string line, variable, value, type, str = "";
-	Color color;
+	string line, variable, value, type = "";
 
 	cout << "Parsing GUI file in " << GUIFileName << ".txt\n";
 
-	// parse GUIFile
-	if (GUIFile.good()) 
+	if (GUIFile.good()) // parse GUIFile
 	{
 		while (getline(GUIFile, line)) 
 		{
@@ -40,11 +37,12 @@ void GUI::ParseElements()
 					ButtonStack.push_back(new ElementButton);
 					type = "Button";
 				}
-				/*else if (line == "ComboBox")
+				else if (line == "ComboBox")
 				{
-					ComboBoxStack.push_back(new ElementComboBox);
+					ComboBoxStack.push_back(new ElementComboBox(window));
+					//ComboBoxStack.front->AddButton()
 					type = "ComboBox";
-				}*/
+				}
 				else
 				{
 					cout << "ERROR: Unknown element. Types are ComboBox and Button ATM.";
@@ -72,128 +70,45 @@ void GUI::ParseElements()
 			{
 				if (variable == "color")
 				{
-					value = value + ' ';
-					
-					//for loop variables
-					int coloriterator = 0;
-					string rgba = "";
-
-					cout << "Color of button #" << ButtonStack.size() << " is parsing.\n";
-					for (int i = 0; i < value.size(); i++)
-					{
-						if (value.at(i) == ',' || value.at(i) == ' ')
-						{
-							if (coloriterator == 0)
-							{
-								color.r = atoi(rgba.c_str());
-								cout << "R = " << rgba << endl;
-							}
-							else if (coloriterator == 1)
-							{
-								color.g = atoi(rgba.c_str());
-								cout << "G = " << rgba << endl;
-							}
-							else if (coloriterator == 2)
-							{
-								color.b = atoi(rgba.c_str());
-								cout << "B = " << rgba << endl;
-							}
-							else if (coloriterator == 3)
-							{
-								color.a = atoi(rgba.c_str());
-								cout << "A = " << rgba << endl;	
-								break; 
-							}	
-							else
-							{
-								cout << "WARNING: Too many arguments for the color variable in button " << ButtonStack.size() << "!\n";
-							}
-							coloriterator++;
-							rgba = "";
-						}
-						else
-						{
-							rgba = rgba + value.at(i);
-							cout << "Added " << int(value.at(i) - '0') << endl;
-						}
-					}
-					ButtonStack.back()->SetColor(color);
+					ButtonStack.back()->SetColor(ParseColor(value));
 				}
 				else if (variable == "location") 
 				{
-					Vector2f Location;
-					
-					value = value + ' ';
-
-					//for loop variable
-					for (int i = 0; i < value.length(); i++)
-					{
-						if (value.at(i) == ',') 
-						{
-							Location.x = atoi(str.c_str());
-							str = "";
-							cout << "Location of button #" << ButtonStack.size() << " is parsing. X = " << Location.x << "%";			
-						}
-						else if (value.at(i) == ' ')
-						{
-							Location.y = atoi(str.c_str());
-							cout << ", Y = " << Location.y << "%" << endl;
-							break;
-						}
-						else if (value.at(i) == '%')
-						{
-							continue;
-						}
-						else
-						{
-							str = str + value.at(i);
-						}
-					}
-					ButtonStack.back()->SetLocation(Location, Vector2f(window->getSize().x, window->getSize().y));
+					ButtonStack.back()->SetLocation(ParseLocation(value), window->getSize());
 				}
 				else if (variable == "text") 
 				{
 					ButtonStack.back()->SetText(value);
-					cout << "Text of button #" << ButtonStack.size() << " is parsing. \nText = " << value << endl;
 				}
 				else if (variable == "size")
 				{
-					cout << "Size of button #" << ButtonStack.size() << " is parsing. " << endl;
-					Vector2f Size;
-					string str = "";
-
-					value = value + ' ';
-
-					//for loop variable
-					for (int i = 0; i < value.length(); i++)
-					{
-						if (value.at(i) == ',')
-						{
-							Size.x = atoi(str.c_str());
-							str = "";
-							cout << "X = " << Size.x << endl;
-						}
-						else if (value.at(i) == ' ')
-						{
-							Size.y = atoi(str.c_str());
-							cout << "Y = " << Size.y << endl;
-							goto stop;
-						}
-						else
-						{
-							str = str + value.at(i);
-							cout << "Str = " << str << endl;
-						}
-					}
-					stop:
-					ButtonStack.back()->SetSize(Size);
+					ButtonStack.back()->SetSize(ParseSize(value));
 				}
 			}
 		
-			/*else if (type == "ComboBox") 
+			else if (type == "ComboBox") 
 			{
-				ComboBoxStack.back()->letter = value.at(0);
-			} */
+				if (variable == "color")
+				{
+					ButtonStack.back()->SetColor(ParseColor(value));
+				}
+				else if (variable == "location")
+				{
+					ButtonStack.back()->SetLocation(ParseLocation(value), window->getSize());
+				}
+				else if (variable == "text")
+				{
+					ButtonStack.back()->SetText(value);
+				}
+				else if (variable == "size")
+				{
+					ButtonStack.back()->SetSize(ParseSize(value));
+				}
+				else if (variable == "endbutton")
+				{
+
+				}
+			} 
 		}
 
 	}
@@ -203,6 +118,124 @@ void GUI::ParseElements()
 	}
 
 	GUIFile.close();
+}
+
+Color GUI::ParseColor(string Value)
+{
+	Value = Value + ' ';
+
+	//for loop variables
+	Color color;
+	int coloriterator = 0;
+	string rgba = "";
+
+
+	cout << "Color of button #" << ButtonStack.size() << " is parsing.\n";
+	for (int i = 0; i < Value.size(); i++)
+	{
+		if (Value.at(i) == ',' || Value.at(i) == ' ')
+		{
+			if (coloriterator == 0)
+			{
+				color.r = atoi(rgba.c_str());
+				cout << "R = " << rgba << endl;
+			}
+			else if (coloriterator == 1)
+			{
+				color.g = atoi(rgba.c_str());
+				cout << "G = " << rgba << endl;
+			}
+			else if (coloriterator == 2)
+			{
+				color.b = atoi(rgba.c_str());
+				cout << "B = " << rgba << endl;
+			}
+			else if (coloriterator == 3)
+			{
+				color.a = atoi(rgba.c_str());
+				cout << "A = " << rgba << endl;
+				break;
+			}
+			else
+			{
+				cout << "WARNING: Too many arguments for the color variable in button " << ButtonStack.size() << "!\n";
+			}
+			coloriterator++;
+			rgba = "";
+		}
+		else
+		{
+			rgba = rgba + Value.at(i);
+			cout << "Added " << int(value.at(i) - '0') << endl;
+		}
+	}
+	return color;
+}
+
+Vector2f GUI::ParseLocation(string Value)
+{
+	Vector2f Location;
+	string str;
+
+	Value = Value + ' ';
+
+	//for loop variable
+	for (int i = 0; i < Value.length(); i++)
+	{
+		if (Value.at(i) == ',')
+		{
+			Location.x = atoi(str.c_str());
+			str = "";
+			cout << "Location of button #" << ButtonStack.size() << " is parsing. X = " << Location.x << "%";
+		}
+		else if (Value.at(i) == ' ')
+		{
+			Location.y = atoi(str.c_str());
+			cout << ", Y = " << Location.y << "%" << endl;
+			break;
+		}
+		else if (Value.at(i) == '%')
+		{
+			continue;
+		}
+		else
+		{
+			str = str + Value.at(i);
+		}
+	}
+	return Location;
+}
+Vector2f GUI::ParseSize(string Value)
+{
+	cout << "Size of button #" << ButtonStack.size() << " is parsing. " << endl;
+	Vector2f Size;
+	string str = "";
+
+	Value = Value + ' ';
+
+	//for loop variable
+	for (int i = 0; i < Value.length(); i++)
+	{
+		if (Value.at(i) == ',')
+		{
+			Size.x = atoi(str.c_str());
+			str = "";
+			cout << "X = " << Size.x << endl;
+		}
+		else if (Value.at(i) == ' ')
+		{
+			Size.y = atoi(str.c_str());
+			cout << "Y = " << Size.y << endl;
+			goto stop;
+		}
+		else
+		{
+			str = str + Value.at(i);
+			cout << "Str = " << str << endl;
+		}
+	}
+	stop:
+	return Size;
 }
 
 GUI::~GUI()
@@ -293,3 +326,4 @@ void GUI::Draw()
 		ComboBoxStack.at(i)->Draw();
 	}*/
 }
+
