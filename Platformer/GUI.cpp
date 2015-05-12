@@ -94,19 +94,19 @@ void GUI::ParseElements()
 				}
 				else if (variable == "location")
 				{
-					ButtonStack.back()->SetLocation(ParseLocation(value), window->getSize());
+					ComboBoxStack.back()->ButtonStack.front()->SetLocation(ParseLocation(value), window->getSize());
 				}
 				else if (variable == "text")
 				{
-					ButtonStack.back()->SetText(value);
+					ComboBoxStack.back()->ButtonStack.front()->SetText(value);
 				}
 				else if (variable == "size")
 				{
-					ButtonStack.back()->SetSize(ParseSize(value));
+					ComboBoxStack.back()->ButtonStack.front()->SetSize(ParseSize(value));
 				}
-				else if (variable == "endbutton")
-				{
-
+				else if (variable == "text")
+				{ //work on text separation
+					ComboBoxStack.back()->AddButton(value);
 				}
 			} 
 		}
