@@ -3,6 +3,7 @@
 ElementComboBox::ElementComboBox(RenderWindow* window)
 {
 	this->window = window;
+	ButtonStack.push_back(new ElementButton);
 }
 
 ElementComboBox::~ElementComboBox()
