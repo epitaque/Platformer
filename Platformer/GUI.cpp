@@ -90,7 +90,7 @@ void GUI::ParseElements()
 			{
 				if (variable == "color")
 				{
-					ButtonStack.back()->SetColor(ParseColor(value));
+					ComboBoxStack.back()->ButtonStack.front()->SetColor(ParseColor(value));
 				}
 				else if (variable == "location")
 				{
