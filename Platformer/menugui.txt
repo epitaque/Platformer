@@ -1,0 +1,21 @@
+~Button
+text=This is a really long button string
+size=200,100
+fontsize=10
+PressColor=000,000,200,255
+TextColor=0,0,0,255
+TextPressColor=255,255,255,255
+InteriorColor=255,255,255,255
+OutlineColor=200,200,200,255
+location=70%,70%
+
+~ComboBox
+size=200,100
+fontsize=20
+location=40%,40%
+PressColor=000,000,200,255
+TextColor=0,0,0,255
+TextPressColor=255,255,255,255
+InteriorColor=255,255,255,255
+OutlineColor=200,200,200,255
+text=hi,what,is,up

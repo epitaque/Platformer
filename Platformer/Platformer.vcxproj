@@ -140,6 +140,7 @@
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BlockFunction.cpp" />
     <ClCompile Include="ElementComboBox.cpp" />
+    <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="ElementButton.cpp" />
     <ClCompile Include="Level.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockFunction.h" />
     <ClInclude Include="ElementComboBox.h" />
+    <ClInclude Include="EventManager.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="ElementButton.h" />
     <ClInclude Include="Level.h" />

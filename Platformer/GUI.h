@@ -26,6 +26,7 @@ private:
 	
 	string GUIFileName;
 
+	vector<string> ParseText(string Value);
 	Color ParseColor(string Value);
 	Vector2f ParseLocation(string Value);
 	Vector2f ParseSize(string Value);

@@ -40,7 +40,7 @@ void GUI::ParseElements()
 				else if (line == "ComboBox")
 				{
 					ComboBoxStack.push_back(new ElementComboBox(window));
-					//ComboBoxStack.front->AddButton()
+					ComboBoxStack.front()->AddButton(new ElementButton);
 					type = "ComboBox";
 				}
 				else
@@ -68,9 +68,21 @@ void GUI::ParseElements()
 			//figure out the type then parse the variables
 			if (type == "Button")
 			{
-				if (variable == "color")
+				if (variable == "PressColor")
 				{
-					ButtonStack.back()->SetColor(ParseColor(value));
+					ButtonStack.back()->SetPressColor(ParseColor(value));
+				}
+				else if (variable == "TextPressColor")
+				{
+					ButtonStack.back()->SetPressTextColor(ParseColor(value));
+				}
+				else if (variable == "OutlineColor")
+				{
+					ButtonStack.back()->SetOutlineColor(ParseColor(value));
+				}
+				else if (variable == "InteriorColor")
+				{
+					ButtonStack.back()->SetInteriorColor(ParseColor(value));
 				}
 				else if (variable == "location") 
 				{
@@ -80,6 +92,10 @@ void GUI::ParseElements()
 				{
 					ButtonStack.back()->SetText(value);
 				}
+				else if (variable == "fontsize")
+				{
+					ButtonStack.back()->SetFontSize(atoi(value.c_str()));
+				}
 				else if (variable == "size")
 				{
 					ButtonStack.back()->SetSize(ParseSize(value));
@@ -88,9 +104,21 @@ void GUI::ParseElements()
 		
 			else if (type == "ComboBox") 
 			{
-				if (variable == "color")
+				if (variable == "PressColor")
 				{
-					ComboBoxStack.back()->ButtonStack.front()->SetColor(ParseColor(value));
+					ComboBoxStack.back()->ButtonStack.front()->SetPressColor(ParseColor(value));
+				}
+				else if (variable == "TextPressColor")
+				{
+					ComboBoxStack.back()->ButtonStack.front()->SetPressTextColor(ParseColor(value));
+				}
+				else if (variable == "OutlineColor")
+				{
+					ComboBoxStack.back()->ButtonStack.front()->SetOutlineColor(ParseColor(value));
+				}
+				else if (variable == "InteriorColor")
+				{
+					ComboBoxStack.back()->ButtonStack.front()->SetInteriorColor(ParseColor(value));
 				}
 				else if (variable == "location")
 				{
@@ -99,6 +127,16 @@ void GUI::ParseElements()
 				else if (variable == "text")
 				{
 					ComboBoxStack.back()->ButtonStack.front()->SetText(value);
+					vector<string> StrA = ParseText(value);
+					ComboBoxStack.back()->ButtonStack.front()->SetText(StrA.at(0));
+					for (int i = 1; i < StrA.size(); i++)
+					{						
+						ComboBoxStack.back()->AddButton(StrA.at(i));
+					}
+				}
+				else if (variable == "fontsize")
+				{
+					ComboBoxStack.back()->ButtonStack.front()->SetFontSize(atoi(value.c_str()));
 				}
 				else if (variable == "size")
 				{
@@ -118,6 +156,28 @@ void GUI::ParseElements()
 	}
 
 	GUIFile.close();
+}
+
+vector<string> GUI::ParseText(string Value)
+{
+	Value = Value + ' ';
+	
+	vector<string> strarray;
+	string curstr;
+	cout << "Parsing text of gui...";
+	for (int i = 0; i < Value.size(); i++)
+	{
+		if (Value.at(i) == ',' || Value.at(i) == ' ')
+		{
+			strarray.push_back(curstr);
+			curstr = "";
+		}
+		else
+		{
+			curstr = curstr + Value.at(i);
+		}
+	}
+	return strarray;
 }
 
 Color GUI::ParseColor(string Value)
@@ -166,7 +226,7 @@ Color GUI::ParseColor(string Value)
 		else
 		{
 			rgba = rgba + Value.at(i);
-			cout << "Added " << int(value.at(i) - '0') << endl;
+			cout << "Added " << int(Value.at(i) - '0') << endl;
 		}
 	}
 	return color;
@@ -287,7 +347,7 @@ void GUI::Update()
 				continue; // Do nothing
 			}
 		}
-		else if(Mouse::isButtonPressed(Mouse::Left) && // Is the mouse button being pressed? Yes
+		else if (Mouse::isButtonPressed(Mouse::Left) && // Is the mouse button being pressed? Yes
 			Mouse::getPosition(*window).x > ButtonStack.at(i)->rect.getPosition().x && // Is the click is inside the button?
 			Mouse::getPosition(*window).x < ButtonStack.at(i)->rect.getPosition().x + ButtonStack.at(i)->rect.getSize().x &&
 			Mouse::getPosition(*window).y > ButtonStack.at(i)->rect.getPosition().y &&
@@ -298,20 +358,26 @@ void GUI::Update()
 		}
 		else if (Mouse::isButtonPressed(Mouse::Left))
 		{
-			cout << "Click is not inside of the button. \n";
+		/*	cout << "Click is not inside of the button. \n";
 			cout << "Mouse.x of '" << Mouse::getPosition(*window).x << "' !> Button.rect.x of '" << ButtonStack.at(i)->rect.getPosition().x << "'\n";
 			cout << "Mouse.x of '" << Mouse::getPosition(*window).x << "' !< Button.rect.x  + Button.rect.size.x of '" << ButtonStack.at(i)->rect.getPosition().x + ButtonStack.at(i)->rect.getSize().x << "'\n";
 			cout << "Mouse.y of '" << Mouse::getPosition(*window).y << "' !< Button.rect.y of '" << ButtonStack.at(i)->rect.getPosition().y << "'\n";
 			cout << "Mouse.y of '" << Mouse::getPosition(*window).y << "' !> Button.rect.y  + Button.rect.size.y of '" << ButtonStack.at(i)->rect.getPosition().y + ButtonStack.at(i)->rect.getSize().y << "'\n";
-		}
+	*/	}
 	}
 
 	/*if (Mouse::isButtonPressed(Mouse::Left)) //Output information code
 	{
-		cout << "the right button was pressed" << endl;
-		cout << "mouse x: " << Mouse::getPosition(*window).x << endl;
-		cout << "mouse y: " << Mouse::getPosition(*window).y << endl;	
+	cout << "the right button was pressed" << endl;
+	cout << "mouse x: " << Mouse::getPosition(*window).x << endl;
+	cout << "mouse y: " << Mouse::getPosition(*window).y << endl;
 	} */
+
+	for (int i = 0; i < ComboBoxStack.size(); i++)
+	{
+		ComboBoxStack.at(i)->Update();
+	}
+
 	Draw();
 }
 

@@ -13,7 +13,7 @@ public:
 	~ElementComboBox();
 
 	void Update();
-	void AddButton(ElementButton ButtonA);
+	void AddButton(ElementButton* ButtonA);
 	void AddButton(string TextB);
 	ElementButton* GetSelectedButton();
 
@@ -23,8 +23,8 @@ public:
 	float width, height; 
 private:
 	RenderWindow* window;
-	void Draw(ElementButton* ButtonA);
-	ElementButton* SelectedButton;
+	void Draw();
+	//ElementButton* SelectedButton;
 	void Expand();
 	void Contract();
 };

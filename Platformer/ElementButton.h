@@ -21,23 +21,36 @@ public:
 	void HoverButton();
 	void HoverRelease();
 
+	void SetLocation(Vector2f Location);
 	void SetLocation(Vector2f Location, Vector2u WindowDimensions);
-	void SetColor(Color color);
+	void SetPressColor(Color color);
+	void SetInteriorColor(Color color);
+	void SetOutlineColor(Color color);
+	void SetTextColor(Color color);
+	void SetPressTextColor(Color color);
 	void SetText(string TextA);
 	void SetSize(Vector2f Size);
+	void SetFontSize(int FontSize);
+
+
+	Vector2f GetLocation();
 
 	bool IsReleased;
 	bool IsPressed;
-	Color color;
 
 	bool GetReleasedStatus();
 	void(*ButtonFunction)();
+	Text text;
 	
 private: 
 	Vector2f Size;
 	Font font;
 	Vector2f Location;
-	Text text;
+	Color InteriorColor;
+	Color OutlineColor;
+	Color PressColor; 
+	Color PressTextColor;
+	Color TextColor;
 };
 
 
