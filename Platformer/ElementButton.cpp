@@ -2,25 +2,7 @@
 
 ElementButton::ElementButton() 
 {
-	
-}
-
-ElementButton::ElementButton(string Text, Vector2f Location, Vector2f Size, Color color, void(*ButtonFunction)())
-{
-	//Rect stuff
-	this->ButtonFunction = ButtonFunction;
-	this->PressColor = color;
-	this->Location = Location;
-	rect.setPosition(Location);
-	rect.setSize(Size);
-	rect.setFillColor(color);
-
-	
-	//Text Stuff (see how inconsistently I just capitalized "Stuff"?)
-	font.loadFromFile("Fonts/AlegreyaSansSC-Light.otf");
-
-	text.setFont(font);
-	text.setColor(Color::Black);
+	AnimationDuration = 300;
 }
 
 ElementButton::~ElementButton()
@@ -31,62 +13,63 @@ ElementButton::~ElementButton()
 void ElementButton::SetLocation(Vector2f Location)
 {
 	this->Location = Location;
-	//rect.setOrigin(rect.getPosition().x + (rect.getSize().x / 2.0f), rect.getPosition().y + (rect.getSize().y / 2.0f));
+	//rect.SetOrigin(rect.getPosition().x + (rect.getSize().x / 2.0f), rect.getPosition().y + (rect.getSize().y / 2.0f));
 	rect.setPosition(Location);
 
-	FloatRect textRect = text.getLocalBounds();
-	text.setOrigin(textRect.left + textRect.width / 2.0f,
+	FloatRect textRect = Text.getLocalBounds();
+	Text.setOrigin(textRect.left + textRect.width / 2.0f,
 		textRect.top + textRect.height / 2.0f);
-	text.setPosition(Vector2f(Location.x + (rect.getSize().x / 3), Location.y + (rect.getSize().y / 3)));
+	Text.setPosition(Vector2f(Location.x + (rect.getSize().x / 3), Location.y + (rect.getSize().y / 3)));
 
 	cout << "Set location of rect." << endl;
 }
 
 void ElementButton::SetLocation(Vector2f Location, Vector2u WindowDimensions)
 {
-	//rect.setOrigin(rect.getSize().x / 2.0f, rect.getSize().y / 2.0f);
+	//rect.SetOrigin(rect.getSize().x / 2.0f, rect.getSize().y / 2.0f);
 	
-	rect.setPosition(((Location.x / 100) * WindowDimensions.x) - Size.x / 2, ((Location.y / 100) * WindowDimensions.y) - (Size.y / 2));
-	text.setPosition(((Location.x / 100) * WindowDimensions.x) - (Size.x / 2) + 5, ((Location.y / 100) * WindowDimensions.y)  /*(Size.y / 2)*/ - (text.getCharacterSize() / 1.3));
+	rect.setPosition(((Location.x / 100) * WindowDimensions.x) - (Size.x / 2), ((Location.y / 100) * WindowDimensions.y) - (Size.y / 2));
+	Text.setPosition(((Location.x / 100) * WindowDimensions.x) - (Size.x / 2) + 5, ((Location.y / 100) * WindowDimensions.y)  /*(Size.y / 2)*/ - (Text.getCharacterSize() / 1.3));
 	cout << "Set location of rect." << endl;
 }
 
 void ElementButton::SetText(string TextA)
 {
-	font.loadFromFile("Fonts/AlegreyaSansSC-Light.otf");
+	TextFont.loadFromFile("Fonts/AlegreyaSans-Medium.otf");
+	//font.loadFromFile("arial.ttf");
 
-	text.setFont(font);
-	text.setColor(Color::Black);
-	text.setString(TextA);
-	cout << "Set text to '" << string(text.getString()) << "' for a new button." << endl;
+	Text.setFont(TextFont);
+	Text.setColor(Color::Black);
+	Text.setString(TextA);
+	cout << "Set text to '" << string(Text.getString()) << "' for a new button." << endl;
 }
 
-void ElementButton::SetPressColor(Color color)
+void ElementButton::SetOnClickColor(Color color)
 {
-	this->PressColor = color;
+	this->OnClickInteriorColor = color;
 	cout << "Set fill color of rect." << endl;
 }
 
-void ElementButton::SetPressTextColor(Color color)
+void ElementButton::SetOnClickTextColor(Color color)
 {
-	PressTextColor = color;
+	OnClickTextColor = color;
 }
 
 void ElementButton::SetTextColor(Color color)
 {
 	TextColor = color;
-	text.setColor(color);
+	Text.setColor(color);
 }
 
 void ElementButton::SetInteriorColor(Color color)
 {
-	this->InteriorColor = color;
+	this->EndInteriorColor = color;
 	rect.setFillColor(color);
 }
 
 void ElementButton::SetOutlineColor(Color color)
 {
-	rect.setOutlineThickness(2);
+	rect.setOutlineThickness(1);
 	OutlineColor = color;
 	rect.setOutlineColor(color);
 }
@@ -101,60 +84,66 @@ void ElementButton::SetSize(Vector2f Size)
 
 void ElementButton::SetFontSize(int FontSize)
 {
-	text.setCharacterSize(FontSize);
+	Text.setCharacterSize(FontSize);
 }
 
-void ElementButton::PressButton()
+//
+// Click-related functions
+//---------------------------------
+void ElementButton::OnClick()
 {
-	rect.setFillColor(PressColor);
-	rect.setOutlineColor(PressColor);
-	text.setColor(PressTextColor);
-	IsPressed = true;
+	Clock.restart();
+	
+	IsReleased = false;
+
+	StartInteriorColor = rect.getFillColor();
+	EndInteriorColor = OnClickInteriorColor;
+	StartTextColor = Text.getColor();
+	EndTextColor = OnClickTextColor;
+
+	IsClicked = true;
 }
 
-void ElementButton::SoftRelease()
+void ElementButton::OnSoftRelease()
 {
 	rect.setFillColor(InteriorColor);
 	rect.setOutlineColor(OutlineColor);
-	text.setColor(TextColor);
+	Text.setColor(TextColor);
 
-	IsPressed = false;
+	IsClicked = false;
 }
 
-void ElementButton::ReleaseButton()
+void ElementButton::OnRelease()
 {
-	rect.setFillColor(InteriorColor);
-	rect.setOutlineColor(OutlineColor);
-	text.setColor(TextColor);
 	if (ButtonFunction != NULL)
 	{
 		ButtonFunction();
 	}
-	IsReleased = true;
+	
 	cout << "ButtonFunction!\n";
-	IsPressed = false;
+
+	IsClicked = false;
+	IsHovered = false;
+
+	StartInteriorColor = rect.getFillColor();
+	EndInteriorColor = InteriorColor;
+
+	StartTextColor = Text.getColor();
+	EndTextColor = TextColor;
+
+
+	IsReleased = true;
 }
 
-void ElementButton::HoverButton()
-{
-	rect.setFillColor(OutlineColor);
-}
+//
+// Hover-related functions
+//----------------------------------
 
-void ElementButton::HoverRelease()
+void ElementButton::OnHover()
 {
-	rect.setFillColor(InteriorColor);
-}
-
-bool ElementButton::GetReleasedStatus()
-{
-	if (IsReleased)
+	if (!IsHovered)
 	{
-		IsReleased = false;
-		return true;
-	}
-	else
-	{
-		return false;
+		IsHovered = true;
 	}
 }
 
@@ -162,11 +151,39 @@ void ElementButton::Draw(RenderWindow* window)
 {
 	//cout << "This button's location is: " << this << endl;
 	window->draw(rect);
-	window->draw(text);
+	window->draw(Text);
 	//cout << "Drew button at " << rect.getPosition().x << ", " << rect.getPosition().y << endl;
 }
 
-Vector2f ElementButton::GetLocation()
+//
+// Color fading for the animation
+//-----------------------------
+
+void ElementButton::Update()
 {
-	return rect.getPosition();
+	if (IsClicked)
+	{
+		if (rect.getFillColor() != EndInteriorColor)
+		{
+			rect.setFillColor(StartInteriorColor + ((EndInteriorColor - StartInteriorColor) * (Clock.getElapsedTime().asMilliseconds / AnimationDuration)));
+		}
+	}
+	else if (IsReleased)
+	{
+		if (rect.getFillColor == EndInteriorColor)
+		{
+			IsReleased = false;
+		}
+		else
+		{
+			rect.setFillColor(StartInteriorColor + ((EndInteriorColor - StartInteriorColor) * (Clock.getElapsedTime().asMilliseconds / AnimationDuration)));
+		}
+	}
+	else if (IsHovered)
+	{
+		if (Text.getColor() != EndTextColor)
+		{
+			rect.setFillColor(StartInteriorColor + ((EndInteriorColor - StartInteriorColor) * (Clock.getElapsedTime().asMilliseconds / AnimationDuration)));
+		}
+	}
 }

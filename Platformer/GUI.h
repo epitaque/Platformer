@@ -21,6 +21,11 @@ private:
 	RenderWindow *window;
 	void ParseElements();
 	void Draw();
+
+	int MouseX, MouseY;
+	int ButtonX, ButtonY;
+	Event e;
+
 	vector<ElementButton*> ButtonStack;
 	vector<ElementComboBox*> ComboBoxStack;
 	

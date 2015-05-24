@@ -68,13 +68,13 @@ void GUI::ParseElements()
 			//figure out the type then parse the variables
 			if (type == "Button")
 			{
-				if (variable == "PressColor")
+				if (variable == "OnClickColor")
 				{
-					ButtonStack.back()->SetPressColor(ParseColor(value));
+					ButtonStack.back()->SetOnClickColor(ParseColor(value));
 				}
-				else if (variable == "TextPressColor")
+				else if (variable == "TextOnClickColor")
 				{
-					ButtonStack.back()->SetPressTextColor(ParseColor(value));
+					ButtonStack.back()->SetOnClickTextColor(ParseColor(value));
 				}
 				else if (variable == "OutlineColor")
 				{
@@ -104,13 +104,13 @@ void GUI::ParseElements()
 		
 			else if (type == "ComboBox") 
 			{
-				if (variable == "PressColor")
+				if (variable == "OnClickColor")
 				{
-					ComboBoxStack.back()->ButtonStack.front()->SetPressColor(ParseColor(value));
+					ComboBoxStack.back()->ButtonStack.front()->SetOnClickColor(ParseColor(value));
 				}
-				else if (variable == "TextPressColor")
+				else if (variable == "TextOnClickColor")
 				{
-					ComboBoxStack.back()->ButtonStack.front()->SetPressTextColor(ParseColor(value));
+					ComboBoxStack.back()->ButtonStack.front()->SetOnClickTextColor(ParseColor(value));
 				}
 				else if (variable == "OutlineColor")
 				{
@@ -312,7 +312,7 @@ GUI::~GUI()
 
 void GUI::Update()
 {
-	for (int i = 0; i < ButtonStack.size(); i++)
+	/*for (int i = 0; i < ButtonStack.size(); i++)
 	{
 		//cout << "Button number: " << i << endl;
 		if (ButtonStack.at(i)->IsPressed) // Is the button being pressed?
@@ -358,12 +358,12 @@ void GUI::Update()
 		}
 		else if (Mouse::isButtonPressed(Mouse::Left))
 		{
-		/*	cout << "Click is not inside of the button. \n";
+			cout << "Click is not inside of the button. \n";
 			cout << "Mouse.x of '" << Mouse::getPosition(*window).x << "' !> Button.rect.x of '" << ButtonStack.at(i)->rect.getPosition().x << "'\n";
 			cout << "Mouse.x of '" << Mouse::getPosition(*window).x << "' !< Button.rect.x  + Button.rect.size.x of '" << ButtonStack.at(i)->rect.getPosition().x + ButtonStack.at(i)->rect.getSize().x << "'\n";
 			cout << "Mouse.y of '" << Mouse::getPosition(*window).y << "' !< Button.rect.y of '" << ButtonStack.at(i)->rect.getPosition().y << "'\n";
 			cout << "Mouse.y of '" << Mouse::getPosition(*window).y << "' !> Button.rect.y  + Button.rect.size.y of '" << ButtonStack.at(i)->rect.getPosition().y + ButtonStack.at(i)->rect.getSize().y << "'\n";
-	*/	}
+		}
 	}
 
 	/*if (Mouse::isButtonPressed(Mouse::Left)) //Output information code
@@ -371,11 +371,84 @@ void GUI::Update()
 	cout << "the right button was pressed" << endl;
 	cout << "mouse x: " << Mouse::getPosition(*window).x << endl;
 	cout << "mouse y: " << Mouse::getPosition(*window).y << endl;
-	} */
+	} 
 
 	for (int i = 0; i < ComboBoxStack.size(); i++)
 	{
 		ComboBoxStack.at(i)->Update();
+	}
+	*/
+	MouseX = Mouse::getPosition(*window).x;
+	MouseY = Mouse::getPosition(*window).y;
+
+	switch (e.type)
+	{
+		case Event::MouseButtonPressed:
+			if (e.mouseButton.button == Mouse::Right)
+			{
+				for (int i = 0; i < ButtonStack.size(); i++)
+				{
+					ButtonX = ButtonStack.at(i)->rect.getPosition().x;
+					ButtonY = ButtonStack.at(i)->rect.getPosition().y;
+					
+					if (MouseX > ButtonX &&  // Is the click inside of the button?
+						MouseX < ButtonX + ButtonStack.at(i)->rect.getSize().x &&
+						MouseY > ButtonY &&
+						MouseY < ButtonY + ButtonStack.at(i)->rect.getSize().y)
+					{																				
+						cout << "Click is inside of the button.\n";
+						ButtonStack.at(i)->OnClick();	
+						continue;
+					}
+				}
+			}
+		case Event::MouseButtonReleased:
+			if (e.mouseButton.button == Mouse::Right)
+			{
+				for (int i = 0; i < ButtonStack.size(); i++)
+				{
+					ButtonX = ButtonStack.at(i)->rect.getPosition().x;
+					ButtonY = ButtonStack.at(i)->rect.getPosition().y;
+					if (ButtonStack.at(i)->IsClicked)
+					{
+						if (MouseX > ButtonX &&  // Is the release inside of the button?
+							MouseX < ButtonX + ButtonStack.at(i)->rect.getSize().x &&
+							MouseY > ButtonY &&
+							MouseY < ButtonY + ButtonStack.at(i)->rect.getSize().y)
+						{
+							cout << "Release is inside of the button.\n";
+							ButtonStack.at(i)->OnRelease();
+						}
+						else
+						{
+							ButtonStack.at(i)->OnSoftRelease();
+						}
+					}
+				}
+			}
+		default:
+			for (int i = 0; i < ButtonStack.size(); i++)
+			{
+				ButtonX = ButtonStack.at(i)->rect.getPosition().x;
+				ButtonY = ButtonStack.at(i)->rect.getPosition().y;
+				if (MouseX > ButtonX &&  // Is the release inside of the button?
+					MouseX < ButtonX + ButtonStack.at(i)->rect.getSize().x &&
+					MouseY > ButtonY &&
+					MouseY < ButtonY + ButtonStack.at(i)->rect.getSize().y)
+				{
+					ButtonStack.at(i)->OnHover();
+				}
+				else if (ButtonStack.at(i)->IsHovered)
+				{
+					ButtonStack.at(i)->OnSoftRelease());
+				}
+			}
+	}
+
+	// Update
+	for (int i = 0; i < ButtonStack.size(); i++)
+	{
+		ButtonStack.at(i)->Update();
 	}
 
 	Draw();

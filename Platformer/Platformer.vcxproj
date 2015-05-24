@@ -71,14 +71,14 @@
     <LibraryPath>C:\Users\Brian\C++\SFML-2.2-2013\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\Brian\C++\SFML-2.2-2013-64bit\include;C:\Users\Brian\C++\boost_1_58_0;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Brian\C++\SFML-2.2-2013-64bit\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Brian\C++\SFML\include;C:\Users\Brian\C++\boost_1_58_0;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Brian\C++\SFML\lib;$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
-    <IncludePath>C:\Users\Brian\C++\SFML-2.2-2013-64bit\include;C:\Users\Brian\C++\boost_1_58_0;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Brian\C++\SFML-2.2-2013-64bit\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Brian\C++\SFML\include;C:\Users\Brian\C++\boost_1_58_0;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Brian\C++\SFML\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -101,7 +101,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>sfml-graphics-s-d.lib;freetype.lib;jpeg.lib;glew.lib;sfml-window-s-d.lib;opengl32.lib;gdi32.lib;sfml-audio-s-d.lib;sndfile.lib;openal32.lib;sfml-network-s-d.lib;ws2_32.lib;sfml-system-s-d.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-graphics-s-d.lib;freetype.lib;jpeg.lib;sfml-window-s-d.lib;opengl32.lib;gdi32.lib;sfml-audio-s-d.lib;openal32.lib;sfml-network-s-d.lib;ws2_32.lib;sfml-system-s-d.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -133,7 +133,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>sfml-graphics-s.lib;freetype.lib;jpeg.lib;glew.lib;sfml-window-s.lib;opengl32.lib;gdi32.lib;sfml-audio-s.lib;sndfile.lib;openal32.lib;sfml-network-s.lib;ws2_32.lib;sfml-system-s.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;sfml-system-s.lib;ws2_32.lib;sfml-network-s.lib;openal32.lib;sfml-audio-s.lib;gdi32.lib;opengl32.lib;sfml-window-s.lib;jpeg.lib;freetype.lib;sfml-graphics-s.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
