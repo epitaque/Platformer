@@ -10,6 +10,10 @@ ElementButton::~ElementButton()
 	
 }
 
+//
+// Attribute changing functions used in parsing
+//----------------------------------------------------
+
 void ElementButton::SetLocation(Vector2f Location)
 {
 	this->Location = Location;
@@ -44,10 +48,15 @@ void ElementButton::SetText(string TextA)
 	cout << "Set text to '" << string(Text.getString()) << "' for a new button." << endl;
 }
 
-void ElementButton::SetOnClickColor(Color color)
+void ElementButton::SetOnClickInteriorColor(Color color)
 {
 	this->OnClickInteriorColor = color;
 	cout << "Set fill color of rect." << endl;
+}
+
+void ElementButton::SetOnHoverInteriorColor(Color color)
+{
+	OnHoverInteriorColor = color;
 }
 
 void ElementButton::SetOnClickTextColor(Color color)
@@ -63,7 +72,7 @@ void ElementButton::SetTextColor(Color color)
 
 void ElementButton::SetInteriorColor(Color color)
 {
-	this->EndInteriorColor = color;
+	this->InteriorColor = color;
 	rect.setFillColor(color);
 }
 
@@ -92,12 +101,15 @@ void ElementButton::SetFontSize(int FontSize)
 //---------------------------------
 void ElementButton::OnClick()
 {
+	cout << "Button clicked.\n";
 	Clock.restart();
 	
+	IsSoftReleased = false;
 	IsReleased = false;
 
 	StartInteriorColor = rect.getFillColor();
 	EndInteriorColor = OnClickInteriorColor;
+
 	StartTextColor = Text.getColor();
 	EndTextColor = OnClickTextColor;
 
@@ -106,11 +118,23 @@ void ElementButton::OnClick()
 
 void ElementButton::OnSoftRelease()
 {
-	rect.setFillColor(InteriorColor);
-	rect.setOutlineColor(OutlineColor);
-	Text.setColor(TextColor);
 
-	IsClicked = false;
+	if (IsClicked || IsHovered)
+	{
+		cout << "Button SoftReleased.\n";
+		Clock.restart();
+
+		StartInteriorColor = Color(rect.getFillColor());
+		EndInteriorColor = InteriorColor;
+
+		IsSoftReleased = true;
+		IsClicked = false;
+		IsHovered = false;
+
+		StartTextColor = Text.getColor();
+		EndTextColor = TextColor;
+	}
+	
 }
 
 void ElementButton::OnRelease()
@@ -119,11 +143,16 @@ void ElementButton::OnRelease()
 	{
 		ButtonFunction();
 	}
-	
+
+	cout << "Button released.\n";
 	cout << "ButtonFunction!\n";
+
+	Clock.restart();
 
 	IsClicked = false;
 	IsHovered = false;
+	IsSoftReleased = false;
+	IsReleased = true;
 
 	StartInteriorColor = rect.getFillColor();
 	EndInteriorColor = InteriorColor;
@@ -131,8 +160,6 @@ void ElementButton::OnRelease()
 	StartTextColor = Text.getColor();
 	EndTextColor = TextColor;
 
-
-	IsReleased = true;
 }
 
 //
@@ -141,49 +168,118 @@ void ElementButton::OnRelease()
 
 void ElementButton::OnHover()
 {
-	if (!IsHovered)
+	
+	if (!IsClicked && !IsHovered)
 	{
+		cout << "Button hovered.\n";
+
+		Clock.restart();
+
 		IsHovered = true;
+		StartInteriorColor = rect.getFillColor();
+		EndInteriorColor = OnHoverInteriorColor;
 	}
+	
+	IsSoftReleased = false;
 }
 
-void ElementButton::Draw(RenderWindow* window)
+void ElementButton::Draw(RenderWindow* Window)
 {
 	//cout << "This button's location is: " << this << endl;
-	window->draw(rect);
-	window->draw(Text);
+	Window->draw(rect);
+	Window->draw(Text);
 	//cout << "Drew button at " << rect.getPosition().x << ", " << rect.getPosition().y << endl;
 }
 
 //
-// Color fading for the animation
-//-----------------------------
+// Color fading for the different animations.
+//---------------------------------
 
-void ElementButton::Update()
+void ElementButton::Update(RenderWindow* Window)
 {
+	if (float(Clock.getElapsedTime().asMilliseconds() / AnimationDuration) < 1)
+	{
+		TimePercent = Clock.getElapsedTime().asMilliseconds() / AnimationDuration;
+		//cout << "Updating TimePercent. TimePercent = " << Clock.getElapsedTime().asMilliseconds() / AnimationDuration << endl;
+		//cout << "Elapsed milliseconds: '" << Clock.getElapsedTime().asMilliseconds() << "' \n";
+	}
+	else
+	{
+		TimePercent = 1;
+	}
+
+	/*if (Color(rect.getFillColor()) != EndInteriorColor)
+	{
+		AnimateFadeInterior();
+	}
+	if (Color(Text.getColor()) != EndTextColor)
+	{
+		AnimateFadeText();
+	}*/
+	
 	if (IsClicked)
 	{
-		if (rect.getFillColor() != EndInteriorColor)
-		{
-			rect.setFillColor(StartInteriorColor + ((EndInteriorColor - StartInteriorColor) * (Clock.getElapsedTime().asMilliseconds / AnimationDuration)));
+		if (Color(rect.getFillColor()) != EndInteriorColor)
+		{	
+			AnimateFadeInterior();
+
+			AnimateFadeText();
 		}
 	}
 	else if (IsReleased)
 	{
-		if (rect.getFillColor == EndInteriorColor)
+		if (Color(rect.getFillColor()) == EndInteriorColor)
 		{
 			IsReleased = false;
 		}
 		else
 		{
-			rect.setFillColor(StartInteriorColor + ((EndInteriorColor - StartInteriorColor) * (Clock.getElapsedTime().asMilliseconds / AnimationDuration)));
+			AnimateFadeInterior();
+			
+			AnimateFadeText();
+		}
+	}
+	else if (IsSoftReleased)
+	{
+		if (Color(rect.getFillColor()) == EndInteriorColor)
+		{
+			IsSoftReleased = false;
+		}
+		else
+		{
+			AnimateFadeInterior();
+
+			AnimateFadeText();
 		}
 	}
 	else if (IsHovered)
 	{
-		if (Text.getColor() != EndTextColor)
+		if (Color(rect.getFillColor()) == EndInteriorColor)
 		{
-			rect.setFillColor(StartInteriorColor + ((EndInteriorColor - StartInteriorColor) * (Clock.getElapsedTime().asMilliseconds / AnimationDuration)));
+			
 		}
-	}
+		else
+		{
+			AnimateFadeInterior();
+		}
+	} 
+	Draw(Window);
+}
+
+void ElementButton::AnimateFadeInterior()
+{
+	TempColor.r = (StartInteriorColor.r + (EndInteriorColor.r - StartInteriorColor.r)) * TimePercent;
+	TempColor.b = (StartInteriorColor.b + (EndInteriorColor.b - StartInteriorColor.b)) * TimePercent;
+	TempColor.g = (StartInteriorColor.g + (EndInteriorColor.g - StartInteriorColor.g)) * TimePercent;
+	TempColor.a = (StartInteriorColor.a + (EndInteriorColor.a - StartInteriorColor.a)) * TimePercent;
+	rect.setFillColor(TempColor);
+}
+
+void ElementButton::AnimateFadeText()
+{
+	TempColor.r = (StartTextColor.r + (EndTextColor.r - StartTextColor.r)) * TimePercent;
+	TempColor.b = (StartTextColor.b + (EndTextColor.b - StartTextColor.b)) * TimePercent;
+	TempColor.g = (StartTextColor.g + (EndTextColor.g - StartTextColor.g)) * TimePercent;
+	TempColor.a = (StartTextColor.a + (EndTextColor.a - StartTextColor.a)) * TimePercent;
+	Text.setColor(TempColor);
 }

@@ -1,4 +1,4 @@
-#include "ElementComboBox.h"
+/*#include "ElementComboBox.h"
 
 ElementComboBox::ElementComboBox(RenderWindow* window)
 {
@@ -20,7 +20,7 @@ void ElementComboBox::Update()
 {
 	for (int i = 0; i < ButtonStack.size(); i++)
 	{
-		if (ButtonStack.at(i)->IsPressed) // Is the button being pressed?
+		if (ButtonStack.at(i)->IsClicked) // Is the button being pressed?
 		{								  // Yes
 			cout << "Button " << i << " isPressed.\n";
 			if (!Mouse::isButtonPressed(Mouse::Left)) // Is the mouse button not being pressed
@@ -31,7 +31,7 @@ void ElementComboBox::Update()
 					Mouse::getPosition(*window).y < ButtonStack.at(i)->rect.getPosition().y + ButtonStack.at(i)->rect.getSize().y)
 				{																				// Yes
 					cout << "Click is inside of the button.\n";
-					ButtonStack.at(i)->ReleaseButton();	// Then release the button
+					ButtonStack.at(i)->OnClick();	// Then release the button
 					continue;
 				}
 				else
@@ -58,7 +58,7 @@ void ElementComboBox::Update()
 			Mouse::getPosition(*window).y > ButtonStack.at(i)->rect.getPosition().y &&
 			Mouse::getPosition(*window).y < ButtonStack.at(i)->rect.getPosition().y + ButtonStack.at(i)->rect.getSize().y)
 		{																			// Yes
-			ButtonStack.at(i)->PressButton(); // Press the button
+			ButtonStack.at(i)->OnClickButton(); // Press the button
 			cout << "button has been pressed\n";
 		}
 	}
@@ -148,4 +148,4 @@ void ElementComboBox::Expand()
 void ElementComboBox::Contract()
 {
 	IsExpanded = false;
-}
+} */

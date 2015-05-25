@@ -1,10 +1,11 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <vector>
 #include <iostream>
 #include <fstream>
 #include "ElementButton.h"
-#include "ElementComboBox.h"
+//#include "ElementComboBox.h"
 
 using namespace sf;
 using namespace std;
@@ -22,12 +23,12 @@ private:
 	void ParseElements();
 	void Draw();
 
+	bool MouseIsClicked;
 	int MouseX, MouseY;
 	int ButtonX, ButtonY;
-	Event e;
 
 	vector<ElementButton*> ButtonStack;
-	vector<ElementComboBox*> ComboBoxStack;
+	//vector<ElementComboBox*> ComboBoxStack;
 	
 	string GUIFileName;
 

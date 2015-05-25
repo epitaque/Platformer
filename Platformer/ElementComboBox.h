@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "ElementButton.h"
@@ -28,5 +28,5 @@ private:
 	void Expand();
 	void Contract();
 };
-
+*/
 
