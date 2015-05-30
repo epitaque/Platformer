@@ -5,6 +5,8 @@
 #include <iostream>
 #include <fstream>
 #include "ElementButton.h"
+#include <boost/function.hpp>
+#include <boost/bind.hpp>
 //#include "ElementComboBox.h"
 
 using namespace sf;
@@ -14,12 +16,13 @@ class GUI
 {
 public:
 	GUI::GUI();
-	GUI::GUI(string GUIFileName, RenderWindow* window);
+	GUI::GUI(string GUIFileName, RenderWindow* window, GUI* CurrentGUI);
+	RenderWindow *window;
 	GUI* CurrentGUI;
 	~GUI();
 	void Update();
 private:
-	RenderWindow *window;
+
 	void ParseElements();
 	void Draw();
 
@@ -36,5 +39,6 @@ private:
 	Color ParseColor(string Value);
 	Vector2f ParseLocation(string Value);
 	Vector2f ParseSize(string Value);
+	boost::function<void()> ParseFunction(string Value);
 };
 

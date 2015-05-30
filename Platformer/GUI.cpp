@@ -3,11 +3,29 @@
 using namespace sf;
 using namespace std;
 
-GUI::GUI(string GUIFileName, sf::RenderWindow* window)
+namespace Functions
+{
+	void ReplaceGUI(GUI* CurrentGUI, string GUIFileName)
+	{
+		RenderWindow* Window = CurrentGUI->window;
+		CurrentGUI->~GUI;
+		CurrentGUI = new GUI(GUIFileName, Window, CurrentGUI);
+	}
+}
+
+GUI::GUI(string GUIFileName, sf::RenderWindow* window, GUI* CurrentGUI)
 {
 	this->window = window;
 	this->GUIFileName = GUIFileName;
 	ParseElements();
+}
+
+GUI::~GUI()
+{
+	for (int i = 0; i < ButtonStack.size(); i++)
+	{
+		delete ButtonStack.at(i);
+	}
 }
 
 void GUI::ParseElements()
@@ -103,6 +121,10 @@ void GUI::ParseElements()
 				else if (variable == "Size")
 				{
 					ButtonStack.back()->SetSize(ParseSize(value));
+				}
+				else if (variable == "Function")
+				{
+					ButtonStack.back()->SetFunction(ParseFunction(value));
 				}
 			}
 		
@@ -273,6 +295,7 @@ Vector2f GUI::ParseLocation(string Value)
 	}
 	return Location;
 }
+
 Vector2f GUI::ParseSize(string Value)
 {
 	cout << "Size of button #" << ButtonStack.size() << " is parsing. " << endl;
@@ -305,16 +328,9 @@ Vector2f GUI::ParseSize(string Value)
 	return Size;
 }
 
-GUI::~GUI()
+boost::function<void()> GUI::ParseFunction(string Value)
 {
-	for (int i = 0; i < ButtonStack.size(); i++)
-	{
-		delete ButtonStack.at(i);
-	}
-	/*for (int i = 0; i < ComboBoxStack.size(); i++)
-	{
-		delete ComboBoxStack.at(i);
-	}*/
+	return boost::bind(Functions::ReplaceGUI, _1, _2);
 }
 
 void GUI::Update()
@@ -347,7 +363,6 @@ void GUI::Update()
 				}
 			}
 		}
-
 		else if (EventA.type == Event::MouseButtonReleased && EventA.mouseButton.button == Mouse::Left)
 		{
 			cout << "The left mouse button was released. \n";
@@ -372,8 +387,12 @@ void GUI::Update()
 				}
 			}
 		}
+		else if (EventA.type == Event::Closed)
+		{
+			window->close();
+			break;
+		}
 	}
-
 	// Check if it is hovering
 	for (int i = 0; i < ButtonStack.size(); i++)
 	{
@@ -397,4 +416,3 @@ void GUI::Update()
 		ButtonStack.at(i)->Update(window);
 	}
 }
-

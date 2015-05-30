@@ -1,7 +1,9 @@
 #pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include <SFML\System.hpp>
+#include <SFML/System.hpp>
+#include <boost/function.hpp>
+#include <boost/bind.hpp>
 
 using namespace sf;
 using namespace std;
@@ -22,9 +24,12 @@ public:
 	void OnHover();
 	void SoftRelease();
 
+	void ExecuteFunction();
+
 	// Functions for changing attributes used in parsing
 	void SetLocation(Vector2f Location);
 	void SetLocation(Vector2f Location, Vector2u WindowDimensions);
+	void SetFunction(boost::function<void()>);
 
 	//Text and fill color
 	void SetOnClickInteriorColor(Color color);
@@ -45,7 +50,7 @@ public:
 	bool IsClicked;
 	
 private: 
-
+	boost::function<void()> Function;
 
 	Vector2f GetLocation();	
 

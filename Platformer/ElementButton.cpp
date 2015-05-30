@@ -96,6 +96,11 @@ void ElementButton::SetFontSize(int FontSize)
 	Text.setCharacterSize(FontSize);
 }
 
+void ElementButton::SetFunction(boost::function<void()> Function)
+{
+	this->Function = Function;
+}
+
 //
 // Click-related functions
 //---------------------------------
@@ -160,6 +165,11 @@ void ElementButton::OnRelease()
 	StartTextColor = Text.getColor();
 	EndTextColor = TextColor;
 
+}
+
+void ElementButton::ExecuteFunction()
+{
+	Function();
 }
 
 //
