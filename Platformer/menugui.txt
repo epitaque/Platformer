@@ -8,7 +8,7 @@ TextPressColor=255,255,255,255
 InteriorColor=255,255,255,255
 OutlineColor=200,200,200,255
 location=70%,70%
-
+ 
 ~ComboBox
 size=200,100
 fontsize=20
