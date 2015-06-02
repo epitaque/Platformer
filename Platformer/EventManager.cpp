@@ -1,6 +1,6 @@
 /*#include "EventManager.h"
 
-
+ 
 EventManager::EventManager(RenderWindow* window, string BindingFileName)
 {
 	this->window = window;
