@@ -8,7 +8,7 @@ using namespace std;
 
 class EventManager
 {
-public:
+public: 
 	EventManager(RenderWindow* window, string BindingFileName);
 	~EventManager();
 	void Update();
