@@ -24,6 +24,6 @@ public:
 	GUIElementButton* Button;
 	GUIElementComboBox* ComboBox;
 private:
-	
+	 
 };
 
