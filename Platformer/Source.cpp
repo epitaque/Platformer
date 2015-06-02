@@ -12,9 +12,8 @@ int main()
 	RenderWindow window(VideoMode(1280, 720), "Platformer");
 	View view(Vector2f(0, 0), Vector2f(1280, 720)); //These numbers can be scaled to zoom it out
 	window.setFramerateLimit(60);
-	GUI* CurrentGUI;
-	CurrentGUI = new GUI("menugui", &window, CurrentGUI);
-	CurrentGUI->CurrentGUI = CurrentGUI; //this line is so weird
+	GUI* CurrentGUI = new GUI("menugui", &window);
+	CurrentGUI->SetCurrentGUI(CurrentGUI); //this line is so weird
 
 	while (window.isOpen())
 	{

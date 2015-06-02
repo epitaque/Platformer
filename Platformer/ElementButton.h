@@ -2,16 +2,19 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
+#include <functional>
+#include <vector>
+#include "GUIFunctions.h"
 
 using namespace sf;
 using namespace std;
 
+class GUIFunction;
+
 class ElementButton
 {
 public:
-	ElementButton();
+	ElementButton(GUIFunction* GUIFunctions);
 	~ElementButton();
 
 	RectangleShape rect;
@@ -29,7 +32,7 @@ public:
 	// Functions for changing attributes used in parsing
 	void SetLocation(Vector2f Location);
 	void SetLocation(Vector2f Location, Vector2u WindowDimensions);
-	void SetFunction(boost::function<void()>);
+	void SetFunction(string Type, string Value);
 
 	//Text and fill color
 	void SetOnClickInteriorColor(Color color);
@@ -50,13 +53,12 @@ public:
 	bool IsClicked;
 	
 private: 
-	boost::function<void()> Function;
-
 	Vector2f GetLocation();	
 
+	GUIFunction* GUIFunctions;
+	string FunctionType, FunctionValue;
 
 	void Draw(RenderWindow* Window);
-	void(*ButtonFunction)();
 	void AnimateFadeInterior();
 	void AnimateFadeText();
 

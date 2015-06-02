@@ -3,21 +3,12 @@
 using namespace sf;
 using namespace std;
 
-namespace Functions
-{
-	void ReplaceGUI(GUI* CurrentGUI, string GUIFileName)
-	{
-		RenderWindow* Window = CurrentGUI->window;
-		CurrentGUI->~GUI;
-		CurrentGUI = new GUI(GUIFileName, Window, CurrentGUI);
-	}
-}
-
-GUI::GUI(string GUIFileName, sf::RenderWindow* window, GUI* CurrentGUI)
+GUI::GUI(string GUIFileName, sf::RenderWindow* window)
 {
 	this->window = window;
 	this->GUIFileName = GUIFileName;
 	ParseElements();
+	GUIFunctions = new GUIFunction;
 }
 
 GUI::~GUI()
@@ -26,6 +17,15 @@ GUI::~GUI()
 	{
 		delete ButtonStack.at(i);
 	}
+}
+
+void GUI::SetCurrentGUI(GUI* CurrentGUI) //Also creates a GUIFunction
+{
+	cout << "Setting CurrentGUI. CurrentGUI address = '" << CurrentGUI << endl;
+	this->CurrentGUI = CurrentGUI;
+	GUIFunctions->SetCurrentGUI(this->CurrentGUI);
+	cout << "Setting GUIFunctions' CurrentGUI. GUIFunctions->CurrentGUI = '" << GUIFunctions->CurrentGUI << endl;
+	cout << "GUIFunctions->CurrentGUI->window = " << GUIFunctions->CurrentGUI->window << endl;
 }
 
 void GUI::ParseElements()
@@ -52,7 +52,7 @@ void GUI::ParseElements()
 				line.erase(0, 1);
 				if (line == "Button")  
 				{
-					ButtonStack.push_back(new ElementButton);
+					ButtonStack.push_back(new ElementButton(GUIFunctions));
 					type = "Button";
 				}
 				/*else if (line == "ComboBox")
@@ -124,7 +124,9 @@ void GUI::ParseElements()
 				}
 				else if (variable == "Function")
 				{
-					ButtonStack.back()->SetFunction(ParseFunction(value));
+					vector<string> FunctionA = ParseFunction(value);
+					cout << "Parsed function. Function = '" << FunctionA.at(0) << "', Value = '" << FunctionA.at(1) << "'.\n";
+					ButtonStack.back()->SetFunction(FunctionA.at(0), FunctionA.at(1));
 				}
 			}
 		
@@ -328,9 +330,35 @@ Vector2f GUI::ParseSize(string Value)
 	return Size;
 }
 
-boost::function<void()> GUI::ParseFunction(string Value)
+vector<string> GUI::ParseFunction(string Value)
 {
-	return boost::bind(Functions::ReplaceGUI, _1, _2);
+	string FunctionString;
+	string ValueString;
+	//cout << "Parsing a function." << endl;
+	for (int i = 0; i < Value.length(); i++)
+	{
+		if (Value.at(i) == '(')
+		{
+			//cout << "Encountered '('. Starting ValueString parsing.\n";
+			i++;
+			for (i; i < Value.length() && Value.at(i) != ')'; i++)
+			{
+				ValueString += Value.at(i);
+				//cout << "i = '" << i << "', ValueString = '" << ValueString << "'.\n";
+			}
+			break;
+		}
+		else
+		{
+			FunctionString += Value.at(i);
+		}
+		//cout << "i = '" << i << "', FunctionString = '" << FunctionString << "'.\n";
+	}
+	
+	//cout << "Finished parsing function. FunctionString = '" << FunctionString << "', ValueString = '" << ValueString << "'\n";
+
+	vector<string> foo = { FunctionString, ValueString };
+	return foo;
 }
 
 void GUI::Update()

@@ -143,6 +143,7 @@
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="ElementButton.cpp" />
+    <ClCompile Include="GUIFunctions.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelGUI.cpp" />
     <ClCompile Include="Object.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="ElementButton.h" />
+    <ClInclude Include="GUIFunctions.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelGUI.h" />
     <ClInclude Include="Object.h" />

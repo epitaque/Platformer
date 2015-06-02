@@ -1,8 +1,9 @@
 #include "ElementButton.h"
 
-ElementButton::ElementButton() 
+ElementButton::ElementButton(GUIFunction* GUIFunctions) 
 {
 	AnimationDuration = 300;
+	this->GUIFunctions = GUIFunctions;
 }
 
 ElementButton::~ElementButton()
@@ -96,9 +97,10 @@ void ElementButton::SetFontSize(int FontSize)
 	Text.setCharacterSize(FontSize);
 }
 
-void ElementButton::SetFunction(boost::function<void()> Function)
+void ElementButton::SetFunction(string Type, string Value)
 {
-	this->Function = Function;
+	FunctionType = Type;
+	FunctionValue = Value;
 }
 
 //
@@ -144,13 +146,16 @@ void ElementButton::OnSoftRelease()
 
 void ElementButton::OnRelease()
 {
-	if (ButtonFunction != NULL)
+	if (FunctionType != "")
 	{
-		ButtonFunction();
+		ExecuteFunction();
+	}
+	else
+	{
+		cout << "No function to execute!\n";
 	}
 
 	cout << "Button released.\n";
-	cout << "ButtonFunction!\n";
 
 	Clock.restart();
 
@@ -169,7 +174,7 @@ void ElementButton::OnRelease()
 
 void ElementButton::ExecuteFunction()
 {
-	Function();
+	GUIFunctions->ExecuteFunction(FunctionType, FunctionValue);
 }
 
 //
