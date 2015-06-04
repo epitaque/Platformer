@@ -2,19 +2,17 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
-#include <functional>
 #include <vector>
-#include "GUIFunctions.h"
+#include "GUIForwardDeclarations.h"
+#include "Element.h"
 
 using namespace sf;
 using namespace std;
 
-class GUIFunction;
-
-class ElementButton
+class ElementButton : public Element
 {
 public:
-	ElementButton(GUIFunction* GUIFunctions);
+	ElementButton();
 	~ElementButton();
 
 	RectangleShape rect;
@@ -27,7 +25,7 @@ public:
 	void OnHover();
 	void SoftRelease();
 
-	void ExecuteFunction();
+	void ExecuteFunctionB();
 
 	// Functions for changing attributes used in parsing
 	void SetLocation(Vector2f Location);
@@ -55,7 +53,6 @@ public:
 private: 
 	Vector2f GetLocation();	
 
-	GUIFunction* GUIFunctions;
 	string FunctionType, FunctionValue;
 
 	void Draw(RenderWindow* Window);

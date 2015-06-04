@@ -1,9 +1,8 @@
 #include "ElementButton.h"
 
-ElementButton::ElementButton(GUIFunction* GUIFunctions) 
+ElementButton::ElementButton() 
 {
 	AnimationDuration = 300;
-	this->GUIFunctions = GUIFunctions;
 }
 
 ElementButton::~ElementButton()
@@ -148,7 +147,7 @@ void ElementButton::OnRelease()
 {
 	if (FunctionType != "")
 	{
-		ExecuteFunction();
+		ExecuteFunctionB();
 	}
 	else
 	{
@@ -172,9 +171,9 @@ void ElementButton::OnRelease()
 
 }
 
-void ElementButton::ExecuteFunction()
+void ElementButton::ExecuteFunctionB()
 {
-	GUIFunctions->ExecuteFunction(FunctionType, FunctionValue);
+	ExecuteFunction(FunctionType, FunctionValue);
 }
 
 //

@@ -1,4 +1,5 @@
 #include "GUI.h"
+#include "ElementButton.h"
 
 using namespace sf;
 using namespace std;
@@ -8,7 +9,6 @@ GUI::GUI(string GUIFileName, sf::RenderWindow* window)
 	this->window = window;
 	this->GUIFileName = GUIFileName;
 	ParseElements();
-	GUIFunctions = new GUIFunction;
 }
 
 GUI::~GUI()
@@ -21,11 +21,7 @@ GUI::~GUI()
 
 void GUI::SetCurrentGUI(GUI* CurrentGUI) //Also creates a GUIFunction
 {
-	cout << "Setting CurrentGUI. CurrentGUI address = '" << CurrentGUI << endl;
 	this->CurrentGUI = CurrentGUI;
-	GUIFunctions->SetCurrentGUI(this->CurrentGUI);
-	cout << "Setting GUIFunctions' CurrentGUI. GUIFunctions->CurrentGUI = '" << GUIFunctions->CurrentGUI << endl;
-	cout << "GUIFunctions->CurrentGUI->window = " << GUIFunctions->CurrentGUI->window << endl;
 }
 
 void GUI::ParseElements()
@@ -52,7 +48,8 @@ void GUI::ParseElements()
 				line.erase(0, 1);
 				if (line == "Button")  
 				{
-					ButtonStack.push_back(new ElementButton(GUIFunctions));
+					ButtonStack.push_back(new ElementButton());
+					ButtonStack.back()->SetCurrentGUI(CurrentGUI);
 					type = "Button";
 				}
 				/*else if (line == "ComboBox")

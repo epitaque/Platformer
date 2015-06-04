@@ -1,21 +1,23 @@
-#include "GUIFunctions.h"
+#include "Element.h"
+#include "GUI.h"
 
+using namespace std;
 
-GUIFunction::GUIFunction()
+Element::Element()
 {
 	
 }
 
-void GUIFunction::SetCurrentGUI(GUI* CurrentGUI)
+void Element::SetCurrentGUI(GUI* CurrentGUI)
 {
 	//cout << CurrentGUI;
 	
 	this->CurrentGUI = CurrentGUI;
-	window = CurrentGUI->window;
+	WindowA = CurrentGUI->window;
 
 }
 
-void GUIFunction::ExecuteFunction(string Type, string Value)
+void Element::ExecuteFunction(string Type, string Value)
 {
 	if (Type == "ReplaceGUI")
 	{
@@ -28,15 +30,15 @@ void GUIFunction::ExecuteFunction(string Type, string Value)
 	}
 }
 
-void GUIFunction::ReplaceGUI(string Value)
+void Element::ReplaceGUI(string Value)
 {
 	//cout << CurrentGUI->window << endl;
 	CurrentGUI->~GUI();
-	CurrentGUI = new GUI(Value, window);
+	CurrentGUI = new GUI(Value, WindowA);
 	CurrentGUI->SetCurrentGUI(CurrentGUI);
 }
 
-GUIFunction::~GUIFunction()
+Element::~Element()
 {
 
 }

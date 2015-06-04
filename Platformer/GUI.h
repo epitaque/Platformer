@@ -3,20 +3,8 @@
 #include <SFML/Window.hpp>
 #include <vector>
 #include <iostream>
-#include <functional>
 #include <fstream>
-#include "GUIFunctions.h"
-#include "ElementButton.h"
-//#include "ElementComboBox.h"
-
-//
-// Forward declarations because of cirular dependency. GUIElements' 
-// OnClick functions need a GUI to actually perform the function,
-// and GUIs need the GUIElements to create the elements. 
-//---------------------------------------------------------------
-
-class GUIFunction;
-class ElementButton;
+#include "GUIForwardDeclarations.h"
 
 using namespace sf;
 using namespace std;
@@ -42,7 +30,6 @@ private:
 	vector<ElementButton*> ButtonStack;
 	//vector<ElementComboBox*> ComboBoxStack;
 	
-	GUIFunction* GUIFunctions;
 	string GUIFileName;
 
 	vector<string> GUI::ParseFunction(string Value);
