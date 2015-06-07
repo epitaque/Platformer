@@ -12,10 +12,13 @@ using namespace std;
 class GUI
 {
 public:
-	GUI::GUI(string GUIFileName, RenderWindow* window);
-	RenderWindow *window;
+	GUI::GUI(string GUIFileName, sf::RenderWindow* window);
+	GUI::GUI(string GUIFileName, sf::RenderWindow* window, GUI* CurrentGUI);
+	sf::RenderWindow *window;
 	GUI* CurrentGUI;
 	~GUI();
+
+	string GUIFileName;
 
 	void SetCurrentGUI(GUI* CurrentGUI);
 	void Update();
@@ -29,8 +32,6 @@ private:
 
 	vector<ElementButton*> ButtonStack;
 	//vector<ElementComboBox*> ComboBoxStack;
-	
-	string GUIFileName;
 
 	vector<string> GUI::ParseFunction(string Value);
 

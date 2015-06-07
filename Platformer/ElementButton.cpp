@@ -3,11 +3,12 @@
 ElementButton::ElementButton() 
 {
 	AnimationDuration = 300;
+	TextFont = new Font;
 }
 
 ElementButton::~ElementButton()
 {
-	
+	cout << "Button destructor called.\n";
 }
 
 //
@@ -25,7 +26,6 @@ void ElementButton::SetLocation(Vector2f Location)
 		textRect.top + textRect.height / 2.0f);
 	Text.setPosition(Vector2f(Location.x + (rect.getSize().x / 3), Location.y + (rect.getSize().y / 3)));
 
-	cout << "Set location of rect." << endl;
 }
 
 void ElementButton::SetLocation(Vector2f Location, Vector2u WindowDimensions)
@@ -34,24 +34,22 @@ void ElementButton::SetLocation(Vector2f Location, Vector2u WindowDimensions)
 	
 	rect.setPosition(((Location.x / 100) * WindowDimensions.x) - (Size.x / 2), ((Location.y / 100) * WindowDimensions.y) - (Size.y / 2));
 	Text.setPosition(((Location.x / 100) * WindowDimensions.x) - (Size.x / 2) + 5, ((Location.y / 100) * WindowDimensions.y)  /*(Size.y / 2)*/ - (Text.getCharacterSize() / 1.3));
-	cout << "Set location of rect." << endl;
 }
 
 void ElementButton::SetText(string TextA)
 {
-	TextFont.loadFromFile("Fonts/AlegreyaSans-Medium.otf");
+	TextFont->loadFromFile("Fonts/AlegreyaSans-Medium.otf");
 	//font.loadFromFile("arial.ttf");
 
-	Text.setFont(TextFont);
+	Text.setFont(*TextFont);
 	Text.setColor(Color::Black);
 	Text.setString(TextA);
-	cout << "Set text to '" << string(Text.getString()) << "' for a new button." << endl;
+	//cout << "Set text to '" << string(Text.getString()) << "' for a new button." << endl;
 }
 
 void ElementButton::SetOnClickInteriorColor(Color color)
 {
 	this->OnClickInteriorColor = color;
-	cout << "Set fill color of rect." << endl;
 }
 
 void ElementButton::SetOnHoverInteriorColor(Color color)
@@ -88,7 +86,7 @@ void ElementButton::SetSize(Vector2f Size)
 	this->Size = Size;
 	rect.setSize(Size);
 	
-	cout << "Set size of rect." << endl;
+	//cout << "Set size of rect." << endl;
 }
 
 void ElementButton::SetFontSize(int FontSize)
@@ -200,6 +198,7 @@ void ElementButton::OnHover()
 void ElementButton::Draw(RenderWindow* Window)
 {
 	//cout << "This button's location is: " << this << endl;
+	//cout << "Drawing rect for button. rect address = " << &rect << endl;
 	Window->draw(rect);
 	Window->draw(Text);
 	//cout << "Drew button at " << rect.getPosition().x << ", " << rect.getPosition().y << endl;

@@ -63,6 +63,9 @@
     <ClCompile Include="Element.cpp">
       <Filter>GUI\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GUITempReplacer.cpp">
+      <Filter>GUI\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Object.h">
@@ -102,6 +105,9 @@
       <Filter>GUI\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GUIForwardDeclarations.h">
+      <Filter>GUI\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUITempReplacer.h">
       <Filter>GUI\Header Files</Filter>
     </ClInclude>
   </ItemGroup>

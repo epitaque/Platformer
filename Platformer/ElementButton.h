@@ -65,7 +65,7 @@ private:
 
 	Vector2f Size;
 	
-	Font TextFont;
+	Font* TextFont;
 	Text Text;
 
 	Vector2f Location;

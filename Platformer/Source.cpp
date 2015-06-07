@@ -12,11 +12,24 @@ int main()
 	RenderWindow window(VideoMode(1280, 720), "Platformer");
 	View view(Vector2f(0, 0), Vector2f(1280, 720)); //These numbers can be scaled to zoom it out
 	window.setFramerateLimit(60);
-	GUI* CurrentGUI = new GUI("menugui", &window);
+	GUI* CurrentGUI = new GUI("menugui.txt", &window);
 	CurrentGUI->SetCurrentGUI(CurrentGUI); //this line is so weird
-
+	GUI* TestGUI = CurrentGUI;
+	Clock clock;
 	while (window.isOpen())
 	{
+		if (CurrentGUI != TestGUI)
+		{
+			cout << "New GUI in the main loop.\n";
+			TestGUI = CurrentGUI;
+		}
+		if (clock.getElapsedTime().asSeconds() > 2)
+		{
+			cout << "CurrentGUI Address = " << CurrentGUI << endl;
+			cout << "CurrentGUI name = " << CurrentGUI->GUIFileName << endl;
+
+			clock.restart();
+		}
 		window.clear(Color::White);
 		Event event;
 		/*while (window.pollEvent(event)) //If theres any event that is supposed to close the window, do that and deallocate everything.

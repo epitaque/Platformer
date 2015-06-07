@@ -7,31 +7,48 @@ using namespace std;
 GUI::GUI(string GUIFileName, sf::RenderWindow* window)
 {
 	this->window = window;
+	cout << "New GUI address: " << this << endl;
+	//cout << "window from outside function = " << window << endl;
+	//cout << "from inside function = " << this->window << endl;
 	this->GUIFileName = GUIFileName;
+}    
+
+GUI::GUI(string GUIFileName, sf::RenderWindow* window, GUI* CurrentGUI)
+{
+	this->window = window;
+	cout << "GUI address: " << this << endl;
+	//cout << "window from outside function = " << window << endl;
+	//cout << "from inside function = " << this->window << endl;
+	this->GUIFileName = GUIFileName;
+	this->CurrentGUI = CurrentGUI;
 	ParseElements();
 }
 
 GUI::~GUI()
 {
+	cout << "GUI destructor called.\n";
 	for (int i = 0; i < ButtonStack.size(); i++)
 	{
-		delete ButtonStack.at(i);
+		cout << "Deleting ButtonStack.at(" << i << "). Address = " << ButtonStack.at(i) << endl;
+		ButtonStack.at(i)->~ElementButton();
+		ButtonStack.pop_back();
 	}
 }
 
 void GUI::SetCurrentGUI(GUI* CurrentGUI) //Also creates a GUIFunction
 {
 	this->CurrentGUI = CurrentGUI;
+	ParseElements();
 }
 
 void GUI::ParseElements()
 {
 	ifstream GUIFile;
-	GUIFile.open(GUIFileName + ".txt", ios::in);
+	GUIFile.open(GUIFileName, ios::in);
 
 	string line, variable, value, type = "";
 
-	cout << "Parsing GUI file in " << GUIFileName << ".txt\n";
+	cout << "Parsing GUI file in " << GUIFileName << endl;
 
 	if (GUIFile.good()) // parse GUIFile
 	{
@@ -48,7 +65,11 @@ void GUI::ParseElements()
 				line.erase(0, 1);
 				if (line == "Button")  
 				{
+					cout << "ButtonStack.size() before pushing a new button: " << ButtonStack.size() << endl;
+					cout << "Pushing back new button. ";
 					ButtonStack.push_back(new ElementButton());
+					cout << "Button Address = " << ButtonStack.back() << endl;
+					cout << "New ButtonStack size: " << ButtonStack.size() << endl;
 					ButtonStack.back()->SetCurrentGUI(CurrentGUI);
 					type = "Button";
 				}
@@ -77,7 +98,7 @@ void GUI::ParseElements()
 				{
 					value = value + line.at(v);
 				}
-				cout << "\nVariable: '" << variable << "' Value: '" << value << "'\n";
+				cout << "Variable: '" << variable << "' Value: '" << value << "'\n";
 			}
 
 			//figure out the type then parse the variables
@@ -185,6 +206,7 @@ void GUI::ParseElements()
 	}
 
 	GUIFile.close();
+	cout << "ButtonStack.size() = " << ButtonStack.size() << endl;
 }
 
 vector<string> GUI::ParseText(string Value)
@@ -219,7 +241,7 @@ Color GUI::ParseColor(string Value)
 	string rgba = "";
 
 
-	cout << "Color of button #" << ButtonStack.size() << " is parsing.\n";
+	//cout << "Color of button #" << ButtonStack.size() << " is parsing.\n";
 	for (int i = 0; i < Value.size(); i++)
 	{
 		if (Value.at(i) == ',' || Value.at(i) == ' ')
@@ -227,22 +249,18 @@ Color GUI::ParseColor(string Value)
 			if (coloriterator == 0)
 			{
 				color.r = atoi(rgba.c_str());
-				cout << "R = " << rgba << endl;
 			}
 			else if (coloriterator == 1)
 			{
 				color.g = atoi(rgba.c_str());
-				cout << "G = " << rgba << endl;
 			}
 			else if (coloriterator == 2)
 			{
 				color.b = atoi(rgba.c_str());
-				cout << "B = " << rgba << endl;
 			}
 			else if (coloriterator == 3)
 			{
 				color.a = atoi(rgba.c_str());
-				cout << "A = " << rgba << endl;
 				break;
 			}
 			else
@@ -255,7 +273,6 @@ Color GUI::ParseColor(string Value)
 		else
 		{
 			rgba = rgba + Value.at(i);
-			cout << "Added " << int(Value.at(i) - '0') << endl;
 		}
 	}
 	return color;
@@ -275,12 +292,12 @@ Vector2f GUI::ParseLocation(string Value)
 		{
 			Location.x = atoi(str.c_str());
 			str = "";
-			cout << "Location of button #" << ButtonStack.size() << " is parsing. X = " << Location.x << "%";
+			//cout << "Location of button #" << ButtonStack.size() << " is parsing. X = " << Location.x << "%";
 		}
 		else if (Value.at(i) == ' ')
 		{
 			Location.y = atoi(str.c_str());
-			cout << ", Y = " << Location.y << "%" << endl;
+			//cout << ", Y = " << Location.y << "%" << endl;
 			break;
 		}
 		else if (Value.at(i) == '%')
@@ -297,7 +314,7 @@ Vector2f GUI::ParseLocation(string Value)
 
 Vector2f GUI::ParseSize(string Value)
 {
-	cout << "Size of button #" << ButtonStack.size() << " is parsing. " << endl;
+	//cout << "Size of button #" << ButtonStack.size() << " is parsing. " << endl;
 	Vector2f Size;
 	string str = "";
 
@@ -309,18 +326,18 @@ Vector2f GUI::ParseSize(string Value)
 		{
 			Size.x = atoi(str.c_str());
 			str = "";
-			cout << "X = " << Size.x << endl;
+			//cout << "X = " << Size.x << endl;
 		}
 		else if (Value.at(i) == ' ')
 		{
 			Size.y = atoi(str.c_str());
-			cout << "Y = " << Size.y << endl;
+			//cout << "Y = " << Size.y << endl;
 			goto stop;
 		}
 		else
 		{
 			str = str + Value.at(i);
-			cout << "Str = " << str << endl;
+			//cout << "Str = " << str << endl;
 		}
 	}
 	stop:
@@ -436,8 +453,11 @@ void GUI::Update()
 		}
 	}
 	
+	//cout << "Buttonstack size: " << ButtonStack.size() << endl; 
+
 	for (int i = 0; i < ButtonStack.size(); i++)
 	{
+		//cout << "Updating ButtonStack.at(" << i << "). window address = " << window << endl;
 		ButtonStack.at(i)->Update(window);
 	}
 }

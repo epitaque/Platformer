@@ -1,4 +1,5 @@
 #include "Element.h"
+#include "GUITempReplacer.h"
 #include "GUI.h"
 
 using namespace std;
@@ -13,7 +14,8 @@ void Element::SetCurrentGUI(GUI* CurrentGUI)
 	//cout << CurrentGUI;
 	
 	this->CurrentGUI = CurrentGUI;
-	WindowA = CurrentGUI->window;
+	//cout << "Element.cpp outsidewindow: " << CurrentGUI->window << endl;
+	//cout << "Element.cpp insidewindow: " << this->CurrentGUI->window << endl;
 
 }
 
@@ -22,6 +24,7 @@ void Element::ExecuteFunction(string Type, string Value)
 	if (Type == "ReplaceGUI")
 	{
 		cout << "Switching GUIs...\n";
+		cout << "Value = " << Value << endl;
 		ReplaceGUI(Value);
 	}
 	else
@@ -32,13 +35,10 @@ void Element::ExecuteFunction(string Type, string Value)
 
 void Element::ReplaceGUI(string Value)
 {
-	//cout << CurrentGUI->window << endl;
-	CurrentGUI->~GUI();
-	CurrentGUI = new GUI(Value, WindowA);
-	CurrentGUI->SetCurrentGUI(CurrentGUI);
+	GUITempReplacer(Value, CurrentGUI->window, CurrentGUI);
 }
 
 Element::~Element()
 {
-
+	cout << "Element destructor called.\n";
 }

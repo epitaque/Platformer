@@ -10,13 +10,9 @@ public:
 	Element();
 	~Element();
 	void SetCurrentGUI(GUI* CurrentGUI); 
-	GUI* CurrentGUI;
 	void ExecuteFunction(std::string Type, std::string Value);
-	sf::RenderWindow* WindowA;
-	void ReplaceGUI(std::string Value);
-protected:
-
 private:
-	
+	void ReplaceGUI(std::string Value);
+	GUI* CurrentGUI;
 };
 
